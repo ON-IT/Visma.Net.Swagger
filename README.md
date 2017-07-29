@@ -1,4 +1,4 @@
-﻿# Visma.net Integrations Swagger Client
+﻿# Visma.net Integrations API Client (Swagger generated)
 
 [![NuGet version](https://badge.fury.io/nu/Visma.net.swagger.svg)](https://www.nuget.org/packages/Visma.net.swagger) 
 
