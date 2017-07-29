@@ -24,7 +24,7 @@ Console.WriteLine(url);
 
 Console.Write("Enter code: ");
 var code = Console.ReadLine();
-var token = VismaNetAuthenticationHelper.CreateTokenFromCode(dev_client_id, dev_secret, code, redirect_url).Result;
+var token = await VismaNetAuthenticationHelper.CreateTokenFromCode(dev_client_id, dev_secret, code, redirect_url);
 ```
 
 #### Using the generated token to list available companies
@@ -34,7 +34,7 @@ var authentication = new VismaNetSettings {
     Token = token
 };
 var security = new SecurityClient(authentication);
-var contexts = security.GetAvailableUserContextsAsync().Result;
+var contexts = await security.GetAvailableUserContextsAsync();
 foreach(var context in contexts){
     Console.WriteLine($"{context.Id}: {context.Name}");
 }
@@ -50,7 +50,7 @@ var authentication = new VismaNetSettings
 };
 
 var customer = new CustomerClient(authentication);
-var all = customer.GetAllAsync().Result;
+var all = await customer.GetAllAsync();
 foreach (var customerDto in all)
 {
     Console.WriteLine($"{customerDto.Number}: {customerDto.Name}");
