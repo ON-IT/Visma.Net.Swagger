@@ -1,6 +1,6 @@
 ﻿# Visma.net Integrations Swagger Client
 
-![NuGet version](https://badge.fury.io/nu/Visma.net.swagger.svg)](https://www.nuget.org/packages/Visma.net.swagger)
+[![NuGet version](https://badge.fury.io/nu/Visma.net.swagger.svg)](https://www.nuget.org/packages/Visma.net.swagger) 
 
 This is an auto-generated Visma.net Integrations client based on the swagger.json published by Visma. The version number reflects the version of the swagger file it is generated from.
 
