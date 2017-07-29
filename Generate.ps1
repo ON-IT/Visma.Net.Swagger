@@ -29,3 +29,4 @@ $csproj = $csproj -replace "\<Version\>([0-9.]+)</Version>", $versionString
 $csproj = $csproj -replace "\<AssemblyVersion\>([0-9.]+)</AssemblyVersion>", $versionString2
 $csproj = $csproj -replace "\<FileVersion\>([0-9.]+)</FileVersion>", $versionString3
 Set-Content VismaNetSwagger.csproj $csproj
+dotnet build --configuration release
