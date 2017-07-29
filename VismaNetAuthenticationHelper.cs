@@ -11,10 +11,10 @@ namespace VismaNetIntegrations
 {
     public static class VismaNetAuthenticationHelper
     {
-        const string TokenEndpoint = "security/api/v2/token";
-        
+        private const string TokenEndpoint = "security/api/v2/token";
+
         /// <summary>
-        /// Creates a new token to use with the classic authentication flow
+        ///     Creates a new token to use with the classic authentication flow
         /// </summary>
         /// <param name="client_id">ISV Client Id provided by Visma</param>
         /// <param name="secret">ISV Client Secret provided by Visma</param>
@@ -23,28 +23,26 @@ namespace VismaNetIntegrations
         /// <returns></returns>
         public static async Task<string> CreateToken(string client_id, string secret, string username, string password)
         {
-            using (var client = VismaNetClientBase.CreateHttpClient())
+            var client = VismaNetClientBase.HttpClient;
+            var content = new FormUrlEncodedContent(new[]
             {
-                var content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("client_id", client_id),
-                    new KeyValuePair<string, string>("client_secret", secret),
-                    new KeyValuePair<string, string>("username", username),
-                    new KeyValuePair<string, string>("password", password),
-                    new KeyValuePair<string, string>("grant_type", "password")
-                });
-                var data = await client.PostAsync(TokenEndpoint, content);
-                var status = data.StatusCode;
-                if(status != HttpStatusCode.OK)
-                    throw new VismaNetException("Failure to create token.", data.StatusCode.ToString(), await data.Content.ReadAsStringAsync(), data.Headers.ToDictionary(x=>x.Key, x=>x.Value), null);
-                var rsp = JsonConvert.DeserializeObject<JObject>(await data.Content.ReadAsStringAsync());
-                return rsp["token"].Value<string>();
-            }
-
+                new KeyValuePair<string, string>("client_id", client_id),
+                new KeyValuePair<string, string>("client_secret", secret),
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password),
+                new KeyValuePair<string, string>("grant_type", "password")
+            });
+            var data = await client.PostAsync(TokenEndpoint, content);
+            var status = data.StatusCode;
+            if (status != HttpStatusCode.OK)
+                throw new VismaNetException("Failure to create token.", data.StatusCode.ToString(),
+                    await data.Content.ReadAsStringAsync(), data.Headers.ToDictionary(x => x.Key, x => x.Value), null);
+            var rsp = JsonConvert.DeserializeObject<JObject>(await data.Content.ReadAsStringAsync());
+            return rsp["token"].Value<string>();
         }
 
         /// <summary>
-        /// Creates a new token using the OAuth authentication flow
+        ///     Creates a new token using the OAuth authentication flow
         /// </summary>
         /// <param name="client_id">ISV Client Id provided by Visma</param>
         /// <param name="secret">ISV Client Secret provided by Visma</param>
@@ -54,27 +52,26 @@ namespace VismaNetIntegrations
         public static async Task<string> CreateTokenFromCode(string client_id, string secret, string code,
             string redirect_uri)
         {
-            using (var client = VismaNetClientBase.CreateHttpClient())
+            var client = VismaNetClientBase.HttpClient;
+            var content = new FormUrlEncodedContent(new[]
             {
-                var content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("client_id", client_id),
-                    new KeyValuePair<string, string>("client_secret", secret),
-                    new KeyValuePair<string, string>("code", code),
-                    new KeyValuePair<string, string>("redirect_uri", redirect_uri),
-                    new KeyValuePair<string, string>("grant_type", "authorization_code")
-                });
-                var data = await client.PostAsync(TokenEndpoint, content);
-                var status = data.StatusCode;
-                if (status != HttpStatusCode.OK)
-                    throw new VismaNetException("Failure to create token from code.", data.StatusCode.ToString(), await data.Content.ReadAsStringAsync(), data.Headers.ToDictionary(x => x.Key, x => x.Value), null);
-                var rsp = JsonConvert.DeserializeObject<JObject>(await data.Content.ReadAsStringAsync());
-                return rsp["token"].Value<string>();
-            }
+                new KeyValuePair<string, string>("client_id", client_id),
+                new KeyValuePair<string, string>("client_secret", secret),
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("redirect_uri", redirect_uri),
+                new KeyValuePair<string, string>("grant_type", "authorization_code")
+            });
+            var data = await client.PostAsync(TokenEndpoint, content);
+            var status = data.StatusCode;
+            if (status != HttpStatusCode.OK)
+                throw new VismaNetException("Failure to create token from code.", data.StatusCode.ToString(),
+                    await data.Content.ReadAsStringAsync(), data.Headers.ToDictionary(x => x.Key, x => x.Value), null);
+            var rsp = JsonConvert.DeserializeObject<JObject>(await data.Content.ReadAsStringAsync());
+            return rsp["token"].Value<string>();
         }
 
         /// <summary>
-        /// Create a url for OAuth authentication flow.
+        ///     Create a url for OAuth authentication flow.
         /// </summary>
         /// <param name="client_id">ISV Client Id provided by Visma</param>
         /// <param name="redirect_uri">Uri to redirect to after authentication</param>
@@ -92,7 +89,7 @@ namespace VismaNetIntegrations
                 $"&client_id={client_id}" +
                 $"&scope=financialstasks" +
                 $"&redirect_uri={Uri.EscapeDataString(redirect_uri)}" +
-                $"&state={(state ?? Guid.NewGuid().ToString())}";
+                $"&state={state ?? Guid.NewGuid().ToString()}";
         }
     }
 }

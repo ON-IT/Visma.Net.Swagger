@@ -10,7 +10,7 @@ namespace VismaNetIntegrations
     {
         internal const string ApiBaseUrl = "https://integration.visma.net/API/";
         private readonly VismaNetSettings _settings;
-        private static HttpClient _httpClient = new HttpClient()
+        internal static readonly HttpClient HttpClient = new HttpClient()
         {
             BaseAddress = new Uri(ApiBaseUrl)
         };
@@ -18,15 +18,10 @@ namespace VismaNetIntegrations
         {
             _settings = settings;
         }
-
-        internal static HttpClient CreateHttpClient()
-        {
-            return _httpClient;
-        }
         
         protected Task<HttpClient> CreateHttpClientAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(CreateHttpClient());
+            return Task.FromResult(HttpClient);
         }
 
         protected Task<HttpRequestMessage> CreateHttpRequestMessageAsync(CancellationToken cancellationToken)
